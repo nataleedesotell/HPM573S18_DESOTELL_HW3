@@ -1,0 +1,72 @@
+# continuation of lecture 2 IntroOOP.py file
+
+#implementing this class called ChanceNode
+class ChanceNode:
+    def __init__(self, cost, name, probs, future_nodes): #initialize our chance node
+        self.name = name #name of this chance node
+        self.cost = cost #cost of visiting this node
+        self.probs = probs #probabilities of visiting future nodes
+        self.future_nodes = future_nodes #a list of future node objects
+
+#class is telling us the expected cost
+    def get_expected_cost(self):
+
+        exp_cost = self.cost #the expected cost of this node, including the cost of visiting this node
+        i = 0 #index to iterate over probabilities
+        for thisNode in self.future_nodes:
+            if type(thisNode) == ChanceNode:
+                exp_cost += thisNode.get_expected_cost() * self.probs[i] #probability is an array, so I want to get the one at index i
+            elif type(thisNode) == TerminalNode:
+                exp_cost += thisNode.get_cost * self.probs[i]
+
+        return exp_cost
+
+#modify our code to include terminal node:
+#introduce an additional class, our terminal class.
+#Capture the terminal node
+
+#What are the main differences between ChanceNode and Terminal node
+# in terms of initialization?
+    #To initialize chance node, we also need to provide the future nodes and
+    # probabilities of visiting them. For terminal node, it's terminal so we
+    # dont get it
+
+
+class TerminalNode:
+    #what kind of information does it need to have? E(cost) of node
+    def __init__(self, name, cost): #initialize
+        self.name = name #names like T1, T2
+        self.cost = cost #passing the cost to it. need to know the cost. This code makes the cost an object created from this class
+#self is referring to the obj that was created by following the recipe in this class
+    def get_cost(self):
+        return self.cost
+
+#four objects that represent our four terminal nodes:
+T1 = TerminalNode("T1", cost = 10)
+T2 = TerminalNode("T2", cost = 20)
+T3 = TerminalNode("T3", cost = 30)
+T4 = TerminalNode("T4", cost = 40)
+
+#chance nodes. Need to pass the name, cost, probabilibies of future nodes, future nodes.
+C2 = ChanceNode("C2", cost = 15, probs = [0.1, 0.2, 0.7], future_nodes = [T1, T2, T3])
+C1 = ChanceNode("C1", cost = 0, probs = [0.5, 0.5], future_nodes=[C2, T1])
+
+print(C1.get_expected_cost())
+
+
+
+#What do we want to get from this terminal node?
+
+#instance of the chance node:
+myChanceNode = ChanceNode([0.1, 0.2, 0.7], [10, 20, 30])
+#print the expected cost
+print(myChanceNode.get_expected_cost())
+#when we are geting the expected cost above, we are passing the prob of outome and cost of outcome,
+#but when we're talking about another chance node (C1), one of the outcomes is another chance node
+#and one of the outcomes is direct cost (?) How to modify code to account for
+#the possibility of chance node being connected to another chance node or termination
+
+#One easy hack is to introduce an additional class, called a terminal class.
+#That way our decision tree looks different (triangles in Reza's drawing)
+
+#can connect cost to each chance node and each terminal node
