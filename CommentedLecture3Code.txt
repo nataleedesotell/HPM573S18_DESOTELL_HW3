@@ -1,4 +1,5 @@
 # continuation of lecture 2 IntroOOP.py file
+#saving from when I switched to the pre-written code from github
 
 #implementing this class called ChanceNode
 class ChanceNode:
